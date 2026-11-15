@@ -12,5 +12,20 @@
   },
   "dependencies": {
     "canvas": "^3.2.3"
-  }
+  },
+  "homepage": "https://anliways.github.io/drag-kings/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anliways/drag-kings.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "game",
+    "html5",
+    "canvas",
+    "webaudio",
+    "pwa",
+    "drag-racing",
+    "2d"
+  ]
 }

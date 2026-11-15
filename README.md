@@ -1,11 +1,18 @@
 # 极速对决 DRAG KINGS
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Play Online](https://img.shields.io/badge/▶%20在线游玩-GitHub%20Pages-ff8a2a)](https://anliways.github.io/drag-kings/)
+
+**▶ 直接在线游玩：[https://anliways.github.io/drag-kings/](https://anliways.github.io/drag-kings/)**
+
 2D 短程直线加速赛（Drag Racing）网页游戏。402 米（四分之一英里）一决胜负，
 核心玩法 = **起步弹射时机 + 完美换挡 + 油门防打滑**，配合改装成长与 10 个递增难度对手。
 
 ## 运行
 
-方式一（推荐，任意静态服务器）：
+方式一（推荐）：直接玩线上版 [https://anliways.github.io/drag-kings/](https://anliways.github.io/drag-kings/)
+
+方式二（本地，任意静态服务器）：
 
 ```bash
 cd drag-racing
@@ -13,7 +20,7 @@ python3 -m http.server 8901
 # 打开 http://127.0.0.1:8901
 ```
 
-方式二：直接双击 `index.html` 也可以玩（无构建、无外部依赖，音效需要首次点击后才会启用——浏览器自动播放策略）。
+方式三：直接双击 `index.html` 也可以玩（无构建、无外部依赖；PWA/Service Worker 仅在 http(s) 下启用）。
 
 ### 安装为桌面/手机应用（PWA）
 
