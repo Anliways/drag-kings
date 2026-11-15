@@ -1,0 +1,10 @@
+# 测试依赖（仅本地 npm test 需要）
+node_modules/
+
+# 生成物
+test/kit_*.png
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.log

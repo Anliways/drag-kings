@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="极速对决">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<title>极速对决 · 短程直线加速赛</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="raceCanvas"></canvas>
+
+  <!-- 比赛HUD -->
+  <div id="raceHud" class="hidden">
+    <div id="hudTop">
+      <div id="raceTimer">0.00s</div>
+      <div id="progressWrap">
+        <div id="progressBar">
+          <div id="pPlayer" class="pdot player"></div>
+          <div id="pOpp" class="pdot opp"></div>
+          <div id="pFinish">🏁</div>
+        </div>
+        <div id="gapText"></div>
+      </div>
+      <div id="lightTree">
+        <div class="lt-col">
+          <div class="lt amber" id="ltA1"></div>
+          <div class="lt amber" id="ltA2"></div>
+          <div class="lt amber" id="ltA3"></div>
+          <div class="lt green" id="ltG"></div>
+          <div class="lt-label">你</div>
+          <div class="lt-react" id="rtP"></div>
+        </div>
+        <div class="lt-col">
+          <div class="lt amber" id="ltB1"></div>
+          <div class="lt amber" id="ltB2"></div>
+          <div class="lt amber" id="ltB3"></div>
+          <div class="lt green" id="ltGO"></div>
+          <div class="lt-label">对手</div>
+          <div class="lt-react" id="rtO"></div>
+        </div>
+      </div>
+    </div>
+    <div id="hintKeys">按住 <b>空格</b> 油门 · <b>F</b> 升挡 · <b>N</b> 氮气 · <b>Esc</b> 暂停</div>
+    <button id="btnPause">⏸</button>
+    <div id="touchControls" class="hidden">
+      <div id="btnShift">升挡<br><span>SHIFT</span></div>
+      <div id="btnNos">氮气<br><span>NOS</span></div>
+      <div id="btnGas">油门<br><span>GAS</span></div>
+    </div>
+  </div>
+
+  <!-- 主菜单 -->
+  <div id="screenMenu" class="screen">
+    <div class="menu-wrap">
+      <div class="menu-title-en">DRAG KINGS</div>
+      <h1 class="menu-title">极速对决</h1>
+      <div class="menu-sub">短程直线加速赛 · 402米一决胜负</div>
+      <canvas id="menuCar" width="560" height="200"></canvas>
+      <div id="menuStats" class="menu-stats"></div>
+      <div class="menu-btns">
+        <button class="btn big" id="btnPlay">🏁 开始比赛</button>
+        <button class="btn ghost" id="btnGarage">🔧 车库改装</button>
+        <div class="menu-row">
+          <button class="btn ghost small" id="btnHowto">操作说明</button>
+          <button class="btn ghost small" id="btnSound">🔊 音效:开</button>
+          <button class="btn ghost small" id="btnFs">⛶ 全屏</button>
+          <button class="btn ghost small" id="btnReset">重置存档</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 赛事选择 -->
+  <div id="screenEvents" class="screen hidden">
+    <div class="topbar">
+      <button class="btn ghost small" id="btnEventsBack">← 返回</button>
+      <div class="topbar-title">🏆 街头排位赛</div>
+      <div class="coin-pill" id="coinsEvents">🪙 0</div>
+    </div>
+    <div class="events-sub" id="eventsSub"></div>
+    <div id="eventList"></div>
+  </div>
+
+  <!-- 车库 -->
+  <div id="screenGarage" class="screen hidden">
+    <div class="topbar">
+      <button class="btn ghost small" id="btnGarageBack">← 返回</button>
+      <div class="topbar-title">🔧 我的车库</div>
+      <div class="coin-pill" id="coinsGarage">🪙 0</div>
+    </div>
+    <div id="garageBody">
+      <div id="garageHero">
+        <canvas id="previewCanvas" width="920" height="360"></canvas>
+        <div id="garageEstimate" class="estimate-box"></div>
+      </div>
+      <div id="garageRight">
+        <div class="tabs">
+          <button class="tab sel" id="tabPerf">⚙️ 性能改装</button>
+          <button class="tab" id="tabVis">🎨 外观定制</button>
+        </div>
+        <div id="perfPane">
+          <div id="partGrid" class="part-grid"></div>
+        </div>
+        <div id="visPane" class="hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 结算 -->
+  <div id="screenResult" class="screen overlay hidden">
+    <div class="result-panel" id="resultPanel"></div>
+  </div>
+
+  <!-- 暂停 -->
+  <div id="pauseOverlay" class="screen overlay hidden">
+    <div class="modal-panel">
+      <h2>⏸ 暂停</h2>
+      <div class="modal-btns">
+        <button class="btn" id="btnResume">继续比赛</button>
+        <button class="btn ghost" id="btnRestart">重新开始</button>
+        <button class="btn ghost" id="btnQuit">退出比赛</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 操作说明 -->
+  <div id="howtoModal" class="screen overlay hidden">
+    <div class="modal-panel howto">
+      <h2>📖 操作说明</h2>
+      <div class="howto-body">
+        <p><b>🏁 起步弹射</b> — 倒数灯亮起前，用油门把转速控制在表盘的<b>绿色起步区间</b>；绿灯亮起的瞬间保持全油门，转速正中区间 = 完美弹射（抓地力加成）。绿灯前就按住油门 = 0.00s 完美预判起步。</p>
+        <p><b>⚙️ 换挡时机</b> — 行进中每当转速进入<b>绿色区间</b>，按 <b>F</b> 升挡。越接近区间中心越强（完美换挡 = 15% 扭矩加成 + 更快的换挡）。换早了会"顿挫"，换晚了顶到红线会<b>断油</b>白白损失时间。</p>
+        <p><b>🛞 油门控制</b> — 低速全油门会<b>烧胎打滑</b>（白烟+转速飙升但车不快）。起步后如发现打滑，适当<b>松一点油门</b>再踩满。</p>
+        <p><b>🌀 涡轮增压</b> — 高转速持续全油门会积攒涡轮压力，爆发额外扭矩；升挡会泄压，换挡越快损失越少。</p>
+        <p><b>💨 氮气（N）</b> — 按住 N 释放氮气：扭矩 +35%，一罐约可喷 4 秒。车轮打滑时喷氮只会加剧空转——留到高挡位、不打滑时再喷最划算；完美换挡会补充少量氮气。</p>
+        <p><b>🎮 手柄</b> — 连接后自动生效：A / RT 油门 · B / RB / Y 升挡 · X / LT 氮气 · Start 暂停，可与键盘/触屏混用。</p>
+        <p><b>🏅 胜负与奖励</b> — 先冲过 402m 终点者获胜。胜场解锁下一个对手；起步、换挡、烧胎决定本场评价 S/A/B/C，评价越高金币加成越多。金币可在车库升级引擎/涡轮/变速箱/轮胎。</p>
+      </div>
+      <div class="modal-btns"><button class="btn" id="btnHowtoClose">明白了</button></div>
+    </div>
+  </div>
+
+  <!-- 首次教学 -->
+  <div id="tutorialOverlay" class="screen overlay hidden">
+    <div class="modal-panel howto">
+      <h2>🎯 第一场比赛</h2>
+      <div class="howto-body">
+        <p>1️⃣ 倒数灯亮起时，<b>按住 空格</b> 轰油门，让指针停在表盘<b>绿色区间</b>里。</p>
+        <p>2️⃣ <b>绿灯亮起</b>的瞬间全力油门弹射出去。</p>
+        <p>3️⃣ 之后每次转速进入<b>绿色换挡区间</b>就按 <b>F</b> 升挡，越准越快！</p>
+        <p>4️⃣ 高挡位不打滑时<b>按住 N</b> 喷氮气，冲尾速！</p>
+        <p>💡 打滑冒烟就松点油门；顶到红线会断油，别拖太久。</p>
+      </div>
+      <div class="modal-btns"><button class="btn" id="btnTutClose">开始比赛!</button></div>
+    </div>
+  </div>
+
+  <div id="popupLayer"></div>
+  <div id="toast" class="hidden"></div>
+
+  <!-- 启动画面（点击开始 = 音频解锁） -->
+  <div id="bootScreen">
+    <div class="boot-inner">
+      <div class="boot-title-en">DRAG KINGS</div>
+      <h1 class="boot-title">极速对决</h1>
+      <div class="boot-sub">短程直线加速赛 · 402米一决胜负</div>
+      <div class="boot-cta">— 点击任意处开始 —</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/assets.js"></script>
+<script src="js/data.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

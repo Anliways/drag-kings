@@ -1,0 +1,16 @@
+{
+  "name": "drag-kings",
+  "version": "1.0.0",
+  "private": true,
+  "description": "极速对决 - 2D 短程直线加速赛网页游戏",
+  "scripts": {
+    "test": "node test/sim_test.js && node test/dom_test.js",
+    "start": "python3 -m http.server 8901"
+  },
+  "devDependencies": {
+    "jsdom": "^31.0.0"
+  },
+  "dependencies": {
+    "canvas": "^3.2.3"
+  }
+}
